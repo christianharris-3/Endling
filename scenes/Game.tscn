@@ -8,8 +8,9 @@
 [node name="Map" parent="." instance=ExtResource("1_1d56h")]
 
 [node name="Player" parent="." instance=ExtResource("2_gxahp")]
-position = Vector2(-3, 47)
+z_index = 1
+position = Vector2(-38, 24)
 
-[node name="MainCamera" type="Camera2D" parent="."]
-position = Vector2(0, 42)
+[node name="MainCamera" type="Camera2D" parent="Player"]
+position = Vector2(4, 3)
 zoom = Vector2(4, 4)
