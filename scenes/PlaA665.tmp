@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://ddi32l05aktpv"]
+
+[ext_resource type="Texture2D" uid="uid://d323wgjp7oqj4" path="res://assets/images/Spork.png" id="1_3htq3"]
+[ext_resource type="Script" path="res://src/Player.gd" id="2_kb7s2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_uw7qc"]
+radius = 4.0
+height = 14.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("2_kb7s2")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_uw7qc")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_3htq3")
