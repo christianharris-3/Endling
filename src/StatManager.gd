@@ -8,8 +8,12 @@ var has_dash = false
 var has_double_jump = false
 var drag = 0.95
 var drag_per_tick = 0.95
+var floor_friction = 0.8
+var air_control = 0.5
 var fall_speed = 3
 var jump = 2
+var dash_vel = 2
+var dash_time = 2
 
 var move_acceleration = 1
 var fall_acceleration = 1
@@ -25,22 +29,30 @@ func _init(stats):
 		jump = stats["jump"]
 	if "has_dash" in stats:
 		has_dash = stats["has_dash"]
+	if "dash_vel" in stats:
+		dash_vel = Utils.val_to_world_val(stats["dash_vel"])
+	if "dash_time" in stats:
+		dash_time = stats["dash_time"]
 	if "has_double_jump" in stats:
 		has_double_jump = stats["has_double_jump"]
 	if "fall_speed" in stats:
 		fall_speed = stats["fall_speed"]
 		
 	if "drag" in stats:
-		drag_per_tick = stats["drag"]
-		drag = stats["drag"]**(Engine.physics_ticks_per_second)
+		drag = stats["drag"]
+	if "floor_friction" in stats:
+		floor_friction = stats["floor_friction"]
+	if "air_control" in stats:
+		air_control = stats["air_control"]
 	
 	calculate_values()
 
 func calculate_values():
-	move_acceleration = (1-drag_per_tick)/drag_per_tick * Utils.val_to_world_val(move_speed)
-	fall_acceleration = (1-drag_per_tick)/drag_per_tick * Utils.val_to_world_val(fall_speed)
+	move_acceleration = (1.0-(drag*floor_friction))/(drag*floor_friction) * Utils.val_to_world_val(move_speed)
+	fall_acceleration = (1.0-drag)/drag * Utils.val_to_world_val(fall_speed)
 	
 	jump_acceleration = Utils.val_to_world_val(jump)
+	dash_acceleration = Utils.val_to_world_val(dash_vel)
 	
 	# code to calculate jump acceleration from an input: jump height, gravity, drag
 	#jump_acceleration = _solve_equation(Utils.val_to_world_val(jump_height), drag_per_tick, fall_acceleration)
