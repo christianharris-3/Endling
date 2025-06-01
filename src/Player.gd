@@ -1,24 +1,30 @@
 extends CharacterBody2D
 const Utils = preload("res://src/Utils.gd")
-const StatManager = preload("res://src/StatManager.gd")
-var stats = StatManager.new({
-	"move_speed":6, "jump":25, "drag":0.96, 
-	"floor_friction":0.8, "air_control":0.2, 
-	"fall_speed": 30, "dash_vel":1, "dash_time":0.05
-})
 
-var key_info = {
-	"left":{"pressed":false, "last_pressed":1, "double_pressed":false},
-	"right":{"pressed":false, "last_pressed":1, "double_pressed":false},
-	"up":{"pressed":false, "last_pressed":1, "double_pressed":false},
-	"down":{"pressed":false, "last_pressed":1, "double_pressed":false},
-}
+var key_info = {}
 
 const double_press_time = 0.2
+
+#### movement variables
+## move controls
+var move_acceleration = 8
+var jump_acceleration = 160
+var dash_speed = 200
+var dash_time = 0.15
+var gravity = 7
+
+## dash vars
 var dashing = false
+var last_direction = Vector2()
 var dash_direction = Vector2()
 var dash_start = 0
 var can_dash = false
+var dash_cooldown = 0.5
+
+func _init():
+	var keys = ["left", "right", "down", "up", "dash"]
+	for k in keys:
+		key_info[k] = {"pressed":false, "just_pressed":false, "last_pressed":1, "double_pressed":false}
 
 func _process(delta):
 	get_input()
@@ -26,15 +32,14 @@ func _process(delta):
 func _physics_process(delta):
 	run_physics(delta)
 	
-	
+	#$Sprite.play("walk")
 
-func get_input():
-	var dashing = false
-	if Input.is_action_just_pressed("dash"):
-		dashing = true	
-	
+func get_input():	
 	for key in key_info:
+		key_info[key]["just_pressed"] = false
+		
 		if Input.is_action_just_pressed(key):
+			key_info[key]["just_pressed"] = true
 			if not key_info[key]["pressed"]:
 				key_info[key]["pressed"] = true
 				if Utils.time_difference(key_info[key]["last_pressed"]) < double_press_time:
@@ -44,48 +49,51 @@ func get_input():
 				key_info[key]["pressed"] = false
 				key_info[key]["double_pressed"] = false
 				key_info[key]["last_pressed"] = Utils.get_time()
-		if key_info[key]["pressed"] and key in ["left","right"] and dashing:
-			dashing = false
-			key_info[key]["double_pressed"] = true
 			
 	
 func run_physics(delta):
-	var move_vector = Vector2(
-		int(key_info["right"]["pressed"])-int(key_info["left"]["pressed"]),
-		0
-	)
+	var keys = [int(key_info["right"]["pressed"]), int(key_info["left"]["pressed"]), int(key_info["down"]["pressed"]), int(key_info["up"]["pressed"])]
+	for i in keys:
+		if i != 0:
+			last_direction = Vector2(keys[0]-keys[1], keys[2]-keys[3])
+			break
+	
+	if keys[0]-keys[1]>0:
+		$Kyro.scale = Vector2(1,1)
+	elif keys[0]-keys[1]<0:
+		$Kyro.scale = Vector2(-1,1)
+	
 	if is_on_floor():
 		if not dashing:
 			can_dash = true
 		if key_info["up"]["pressed"]:
-			velocity.y = -stats.jump_acceleration
-	else:
-		move_vector *= stats["air_control"]
-	velocity += move_vector * stats.move_acceleration
-	
-	if can_dash:
-		if key_info["left"]["double_pressed"]:
-			dashing = true
-		if key_info["right"]["double_pressed"]:
-			dashing = true
+			start_jump()
+	velocity.x += (int(key_info["right"]["pressed"])-int(key_info["left"]["pressed"])) * move_acceleration
+
+	if can_dash and Utils.time_difference(dash_start) > dash_cooldown:
+		if key_info["dash"]["just_pressed"]:
+			start_dash()
 	if dashing:
-		if dash_start == 0:
-			print('dash_started')
-			dash_direction = move_vector.normalized()
-			dash_start = Utils.get_time()
-			can_dash = false
-		velocity = dash_direction*stats.dash_acceleration
-		if Utils.time_difference(dash_start) > stats.dash_time:
-			print('dash ended')
-			dash_start = 0
-			dashing = false
+		velocity = dash_direction*dash_speed
+		if Utils.time_difference(dash_start) > dash_time:
+			end_dash()
 		
 	
 	move_and_slide()
 	
-	velocity.y += stats.fall_acceleration
+	velocity.y += gravity
 	velocity.y *= 0.99
 	velocity.x *= 0.9
-	
-	
+		
+func start_jump():
+	velocity.y = -jump_acceleration
 
+func start_dash():
+	dash_direction = last_direction.normalized()
+	dash_start = Utils.get_time()
+	can_dash = false
+	dashing = true
+	$Dashparticles.restart()
+
+func end_dash():
+	dashing = false
