@@ -1,16 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://ngoukmyx0lod"]
+[gd_scene load_steps=5 format=3 uid="uid://ngoukmyx0lod"]
 
 [ext_resource type="PackedScene" uid="uid://byo8ulo3ro7bt" path="res://scenes/Map.tscn" id="1_1d56h"]
+[ext_resource type="Script" path="res://src/Game.gd" id="1_i0gy0"]
 [ext_resource type="PackedScene" uid="uid://ddi32l05aktpv" path="res://scenes/Player.tscn" id="2_gxahp"]
+[ext_resource type="PackedScene" uid="uid://cef2b8qn0sb2e" path="res://scenes/Crytter.tscn" id="4_0ydls"]
 
 [node name="Game" type="Node2D"]
+script = ExtResource("1_i0gy0")
 
 [node name="Map" parent="." instance=ExtResource("1_1d56h")]
 
 [node name="Player" parent="." instance=ExtResource("2_gxahp")]
 z_index = 1
-position = Vector2(289, -268)
+position = Vector2(-42, -109)
 
 [node name="MainCamera" type="Camera2D" parent="Player"]
 position = Vector2(4, 3)
 zoom = Vector2(4, 4)
+
+[node name="Crytter" parent="." instance=ExtResource("4_0ydls")]
+position = Vector2(22, 11)
