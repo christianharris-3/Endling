@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends "res://src/GameObject.gd"
 const Utils = preload("res://src/Utils.gd")
 
 var key_info = {}
@@ -7,11 +7,8 @@ const double_press_time = 0.2
 
 #### movement variables
 ## move controls
-var move_acceleration = 8
-var jump_acceleration = 160
 var dash_speed = 200
 var dash_time = 0.15
-var gravity = 7
 
 ## dash vars
 var dashing = false
@@ -22,15 +19,16 @@ var can_dash = false
 var dash_cooldown = 0.5
 
 func _init():
+	super(8, 160, 7, false)
 	var keys = ["left", "right", "down", "up", "dash"]
 	for k in keys:
 		key_info[k] = {"pressed":false, "just_pressed":false, "last_pressed":1, "double_pressed":false}
 
-func _process(delta):
+func process(delta):
 	get_input()
 
-func _physics_process(delta):
-	run_physics(delta)
+func physics_process(delta):
+	character_control(delta)
 	
 	#$Sprite.play("walk")
 
@@ -51,7 +49,7 @@ func get_input():
 				key_info[key]["last_pressed"] = Utils.get_time()
 			
 	
-func run_physics(delta):
+func character_control(delta):
 	var keys = [int(key_info["right"]["pressed"]), int(key_info["left"]["pressed"]), int(key_info["down"]["pressed"]), int(key_info["up"]["pressed"])]
 	for i in keys:
 		if i != 0:
@@ -78,12 +76,7 @@ func run_physics(delta):
 		if Utils.time_difference(dash_start) > dash_time:
 			end_dash()
 		
-	
-	move_and_slide()
-	
-	velocity.y += gravity
-	velocity.y *= 0.99
-	velocity.x *= 0.9
+
 		
 func start_jump():
 	velocity.y = -jump_acceleration

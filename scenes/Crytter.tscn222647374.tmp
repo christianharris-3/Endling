@@ -1,10 +1,9 @@
-[gd_scene load_steps=47 format=3 uid="uid://cef2b8qn0sb2e"]
+[gd_scene load_steps=43 format=3 uid="uid://cef2b8qn0sb2e"]
 
 [ext_resource type="Script" uid="uid://de3mxcd24qsgp" path="res://src/Crytter.gd" id="1_1e0uy"]
 [ext_resource type="Texture2D" uid="uid://cex6synfioxem" path="res://assets/images/crytter/get_up.png" id="1_ffrfu"]
 [ext_resource type="Texture2D" uid="uid://bux807r4juiiq" path="res://assets/images/crytter/walk.png" id="3_g3dql"]
 [ext_resource type="Texture2D" uid="uid://d8itgajt1fcc" path="res://assets/images/crytter/idle.png" id="3_qasm8"]
-[ext_resource type="Texture2D" uid="uid://lixqtigl6d68" path="res://assets/images/crytter/jump.png" id="4_iifqp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7lqae"]
 atlas = ExtResource("1_ffrfu")
@@ -113,18 +112,6 @@ region = Rect2(176, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_3qav3"]
 atlas = ExtResource("1_ffrfu")
 region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_isd6q"]
-atlas = ExtResource("4_iifqp")
-region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_r83pc"]
-atlas = ExtResource("4_iifqp")
-region = Rect2(16, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_imjst"]
-atlas = ExtResource("4_iifqp")
-region = Rect2(32, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iyy03"]
 atlas = ExtResource("3_g3dql")
@@ -267,20 +254,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_isd6q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_r83pc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_imjst")
-}],
-"loop": true,
-"name": &"jump",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_iyy03")
 }, {
 "duration": 1.0,
@@ -322,8 +295,10 @@ script = ExtResource("1_1e0uy")
 z_index = 2
 position = Vector2(0, -3)
 sprite_frames = SubResource("SpriteFrames_iiwhu")
-animation = &"jump"
-frame_progress = 0.180236
+animation = &"idle"
+frame_progress = 0.319602
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_rxv85")

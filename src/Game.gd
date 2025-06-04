@@ -1,4 +1,4 @@
 extends Node2D
 
 func _process(delta):
-	$Crytter.process($Player)
+	$Crytter.do_process($Player)
