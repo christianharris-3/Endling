@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dilg36m3yilt1"]
+
+[ext_resource type="Script" uid="uid://b7v0akxo5bgot" path="res://src/spawner.gd" id="1_qcsvw"]
+
+[node name="Spawner" type="Node2D"]
+script = ExtResource("1_qcsvw")
+
+[node name="BottomRightMarker" type="Marker2D" parent="."]
+position = Vector2(200, 200)
+scale = Vector2(0.505, 0.505)

@@ -6,6 +6,8 @@ var jump_acceleration = 140
 var move_keys = {'lr':0, 'jump':false}
 var super_does_movement = false
 
+var dead = false
+
 func _init(move_speed=6, jump_speed=140, fall_speed=7, super_has_movement=true):
 	move_acceleration = move_speed
 	jump_acceleration = jump_speed

@@ -9,11 +9,10 @@ var idle_walking_timer = 0
 func _init():
 	super()
 
-
-func do_process(player):
-	manage_ai([player])
-
 func manage_ai(targets):
+	if ($Sprite.animation in ["get_up", "return_to_shell"] and $Sprite.is_playing()):
+		move_keys['lr'] = 0
+		return
 	if state == 'in_shell':
 		$Sprite.play("in_shell")
 		for t in targets:
@@ -35,7 +34,8 @@ func manage_ai(targets):
 		elif position.distance_to(target.position) > 250:
 			state = 'in_shell'
 			target = null
-			$Sprite.play_backwards("get_up")
+			$Sprite.play("return_to_shell")
+			return
 		
 		if Utils.time_difference(idle_walking_cooldown)>0:
 			idle_walking_timer = Utils.get_time() + Utils.random_range(0.5,1.5)
