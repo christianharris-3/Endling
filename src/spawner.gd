@@ -15,7 +15,7 @@ var spawn_delay = 0
 func make_enemies(tilemap):
 	var enemies = 0
 	for e in spawned_enemies:
-		if not e.dead:
+		if e and not e.dead:
 			enemies+=1
 	
 	if enemies < spawn_limit:
@@ -50,5 +50,6 @@ func location_valid(pos):
 	var result = space_state.intersect_ray(query)
 	
 	if result.size()>0 and point_result.size() == 0:
-		return [true, result["position"]]
+		if result["collider"].get("OBJ_TYPE") == null: # true if type is a tile
+			return [true, result["position"]]
 	return [false, pos]

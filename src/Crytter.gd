@@ -1,6 +1,7 @@
 extends "res://src/GameObject.gd"
 const Utils = preload("res://src/Utils.gd")
 
+const OBJ_TYPE = "enemy"
 var state = 'in_shell'
 var target = null
 var idle_walking_cooldown = 0

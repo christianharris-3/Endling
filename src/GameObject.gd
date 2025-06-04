@@ -7,6 +7,7 @@ var move_keys = {'lr':0, 'jump':false}
 var super_does_movement = false
 
 var dead = false
+var health = 10
 
 func _init(move_speed=6, jump_speed=140, fall_speed=7, super_has_movement=true):
 	move_acceleration = move_speed
@@ -16,6 +17,9 @@ func _init(move_speed=6, jump_speed=140, fall_speed=7, super_has_movement=true):
 
 func _process(delta):
 	process(delta)
+	
+	if health<=0:
+		dead = true
 	
 func _physics_process(delta):
 	physics_process(delta)
@@ -37,3 +41,8 @@ func do_physics(delta):
 	velocity.y += gravity
 	velocity.y *= 0.99
 	velocity.x *= 0.9
+
+func take_damage(damage, knockback=0, source_pos=null):
+	health -= damage
+	if source_pos != null:
+		velocity += knockback * (position-source_pos).normalized()
